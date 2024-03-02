@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import SignUpForm from "../container/SignUpForm";
 
 const HomePage = () => {
@@ -15,7 +15,7 @@ const HomePage = () => {
     }
   }, []);
 
-  return <div>{isLogged ? "" : <SignUpForm />}</div>;
+  return <div>{isLogged ? "" : <Navigate to={"/signup"} />}</div>;
 };
 
 export default HomePage;

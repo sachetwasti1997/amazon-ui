@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-import { API_BASE_PATH } from "../Constants";
+import { API_BASE_PATH, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD } from "../Constants";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = (props) => {
   const [firstName, setFirstName] = useState("");
@@ -9,10 +10,7 @@ const SignUp = (props) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  const FIRST_NAME = "fistName",
-    LAST_NAME = "lastName",
-    EMAIL = "email",
-    PASSWORD = "password";
+  const navigate = useNavigate();
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -26,13 +24,16 @@ const SignUp = (props) => {
       email,
       password,
     };
-    axios.post(API_BASE_PATH + "/user/signup", signUpRequest)
-    .then(res => {
-        console.log(res.data);
-    })
-    .catch(err => {
-        setError(err.message)
-    });
+    axios
+      .post(API_BASE_PATH + "/user/signup", signUpRequest)
+      .then((res) => {
+        const token = res.data;
+        localStorage.setItem("token", token);
+        navigate("/");
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
     console.log(signUpRequest);
   };
 
