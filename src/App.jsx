@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import PaymentForm from './component/PaymentForm';
 import { useState } from 'react';
-import SignUpForm from './component/SignUpForm';
+import SignUpForm from './container/SignUpForm';
 import HomePage from './container/HomePage';
 
 const App = () => {
