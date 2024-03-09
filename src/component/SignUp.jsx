@@ -59,7 +59,7 @@ const SignUp = (props) => {
   };
 
   return (
-    <div className="w-1/2 h-full bg-white flex flex-col p-20 justify-center">
+    <div className="w-2/3 h-full bg-white flex flex-col p-20 justify-center">
       {error && <p className="text-red-500 mb-2">{error}</p>}
       <div className="w-full flex flex-col">
         <div className="w-full flex flex-col">

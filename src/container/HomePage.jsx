@@ -1,44 +1,29 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import SignUpForm from "../container/SignUpForm";
-import axios from "axios";
-import { API_BASE_PATH } from "../Constants";
+import { fetchUserData, fetchUserDataCall } from "../features/user/userDetailsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const HomePage = () => {
-  const [isLogged, setIsUserLogged] = useState(false);
-  const [userData, setUserData] = useState({});
-
-  const getUser = (token) => {
-    console.log(token);
-    axios
-      .get(API_BASE_PATH + "/user/profile", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        setUserData(res.data);
-      })
-      .catch((err) => {
-        localStorage.removeItem("token");
-        setIsUserLogged(false);
-      });
-  };
+  const user = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
 
   useState(() => {
-    const bearerToken = localStorage.getItem("token");
-    console.log(bearerToken);
-    if (!bearerToken) {
-      setIsUserLogged(false);
-    } else {
-      setIsUserLogged(true);
-      getUser(bearerToken);
+    const token = localStorage.getItem("token");
+    if (token && !user.userData && !user.fetchUserDataCalled) {
+      dispatch(fetchUserDataCall())
+      dispatch(fetchUserData());
     }
-  }, []);
+  }, [user]);
+
+  console.log(user);
 
   return (
     <div>
-      {isLogged ? JSON.stringify(userData) : <Navigate to={"/signup"} />}
+      {user.isLogged ? (
+        JSON.stringify(user)
+      ) : (
+        "You are not logged in LOG IN TO CONTINUE"
+      )}
     </div>
   );
 };
