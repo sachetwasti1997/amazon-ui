@@ -2,7 +2,7 @@ import { MdOutlineBubbleChart } from "react-icons/md";
 import { navLinks } from "../Constants";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logOutUser } from "../features/user/userDetailsSlice";
+import { fetchUserDataCall, logOutUser } from "../features/user/userDetailsSlice";
 import React, { useEffect, useState } from "react";
 
 const Nav = () => {
@@ -15,6 +15,7 @@ const Nav = () => {
     navigate("/signup");
     // props.setSignUpPage(true);
     dispatch(logOutUser());
+    dispatch(fetchUserDataCall(false));
   };
 
   const signInClicked = () => {

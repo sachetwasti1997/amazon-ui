@@ -5,21 +5,25 @@ import { useDispatch, useSelector } from "react-redux";
 import Home from "../component/Home";
 
 const HomePage = (props) => {
-  const user = useSelector(state => state.userReducer);
+  const fetchUserDataCalled = useSelector(
+    (state) => state.userReducer.fetchUserDataCalled
+  );
+  const userData = useSelector(state => state.userReducer.userData);
+  const isLogged = useSelector(state => state.userReducer.isLogged);
   const dispatch = useDispatch();
 
   useState(() => {
     const token = localStorage.getItem("token");
-    if (token && !user.userData && !user.fetchUserDataCalled) {
-      dispatch(fetchUserDataCall())
+    if (token && !userData && !fetchUserDataCalled) {
+      dispatch(fetchUserDataCall(true))
       dispatch(fetchUserData());
     }
   }, []);
 
   return (
     <div>
-      {user.isLogged ? (
-        <Home user={user}/>
+      {isLogged ? (
+        <Home user={userData}/>
       ) : (
         "You are not logged in LOG IN TO CONTINUE"
       )}

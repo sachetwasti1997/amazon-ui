@@ -25,11 +25,14 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    fetchUserDataCall: (state) => {
-      state.fetchUserDataCalled = true;
+    fetchUserDataCall: (state, {payload}) => {
+      state.fetchUserDataCalled = payload;
     },
     logOutUser: (state) => {
-      state.isLogged = !state.isLogged
+      state.fetchUserDataCalled = false;
+      state.loading = false;
+      state.isLogged = false;
+      state.userData = null;
     }
   },
   extraReducers: (builder) => {
