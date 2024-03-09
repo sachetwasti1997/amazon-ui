@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { fetchUserData, fetchUserDataCall } from "../features/user/userDetailsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Home from "../component/Home";
 
-const HomePage = () => {
+const HomePage = (props) => {
   const user = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
@@ -13,17 +14,16 @@ const HomePage = () => {
       dispatch(fetchUserDataCall())
       dispatch(fetchUserData());
     }
-  }, [user]);
-
-  console.log(user);
+  }, []);
 
   return (
     <div>
       {user.isLogged ? (
-        JSON.stringify(user)
+        <Home user={user}/>
       ) : (
         "You are not logged in LOG IN TO CONTINUE"
       )}
+      {/* <Home/> */}
     </div>
   );
 };

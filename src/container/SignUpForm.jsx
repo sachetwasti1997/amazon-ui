@@ -17,13 +17,12 @@ const SignUpForm = () => {
   }, []);
 
   const changePage = () => {
-    console.log("Changing Page");
     setLogInPage(!logInPage);
   };
 
   return (
     <div className="w-full h-screen flex items-start">
-      <div className="relative w-1/3 h-full flex flex-col">
+      <div className="relative w-1/2 h-full flex flex-col">
         <div className="absolute top-[45%] left-[10%] flex flex-col">
           <h1 className="text-4xl text-white font-bold my-4">
             Remove Hassel Selling Products Online

@@ -28,6 +28,9 @@ const userSlice = createSlice({
     fetchUserDataCall: (state) => {
       state.fetchUserDataCalled = true;
     },
+    logOutUser: (state) => {
+      state.isLogged = !state.isLogged
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.pending, (state) => {
@@ -50,6 +53,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { fetchUserDataCall } = userSlice.actions;
+export const { fetchUserDataCall, logOutUser } = userSlice.actions;
 
 export default userSlice.reducer;
