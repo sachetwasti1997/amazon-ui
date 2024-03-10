@@ -10,13 +10,15 @@ import { useSelector } from "react-redux";
 
 const App = () => {
   const isLogged = useSelector((state) => state.userReducer.isLogged);
+  const token = localStorage.getItem("token");
+
   return (
     <div>
       <Nav/>
       <Routes>
         <Route path="/" element={<HomePage />} />
         {!isLogged && <Route path="/signup" element={<SignUpForm />} />}
-        {isLogged && (
+        {(isLogged || token) && (
           <>
             <Route path="/orders" element={<Orders />} />
             <Route path="/profile" element={<Profile />} />
