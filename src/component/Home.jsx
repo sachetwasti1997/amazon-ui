@@ -3,8 +3,8 @@ import Nav from "./Nav";
 const Home = (props) => {
     return (
       <>
-        <div className="w-full h-screen bg-cyan-100">
-          {JSON.stringify(props.user)}
+        <div className="h-screen w-screen bg-cyan-100 p-2">
+          <p className="w-[100%]">{props.user?.email}</p>
         </div>
       </>
     );

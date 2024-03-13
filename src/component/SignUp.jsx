@@ -32,7 +32,7 @@ const SignUp = (props) => {
         navigate("/");
       })
       .catch((err) => {
-        setError(err.message);
+        setError(err.response.data.message);
       });
     console.log(signUpRequest);
   };

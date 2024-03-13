@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MODAL_UPDATE_ACTION } from "../Constants";
 import UserEdit from "./UserEdit";
+import { useSelector } from "react-redux";
 
 export default function Modal({
   showModal,
@@ -8,10 +9,13 @@ export default function Modal({
   modalAction,
   userData,
 }) {
+  const [submit, setSubmit] = useState(false);
+  const error = useSelector(state => state.userReducer.error)
   return (
     <>
       {showModal ? (
         <>
+          {error && <p className="text-red-500 mb-2">{error}</p>}
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
@@ -30,7 +34,7 @@ export default function Modal({
                 </div>
                 <div className="p-20">
                   {modalAction === MODAL_UPDATE_ACTION && (
-                    <UserEdit userData={userData} />
+                    <UserEdit userData={userData} submit={submit} />
                   )}
                 </div>
                 {/*footer*/}
@@ -45,7 +49,10 @@ export default function Modal({
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => {
+                      setSubmit(true);
+                      // setShowModal(false);
+                    }}
                   >
                     Save Changes
                   </button>

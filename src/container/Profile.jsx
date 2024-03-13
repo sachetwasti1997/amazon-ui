@@ -48,7 +48,10 @@ const Profile = () => {
         <h2 class="font-semibold">
           {userData?.firstName} {userData?.lastName}
         </h2>
-        <p class="text-gray-500">{userData.email}</p>
+        <p class="text-gray-500">{userData?.email}</p>
+        <p class="text-gray-500">
+          {userData?.countryCode} {userData?.phone}
+        </p>
       </div>
       <div className="flex justify-between">
         <button

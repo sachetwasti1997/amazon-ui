@@ -27,7 +27,7 @@ const Login = (props) => {
         navigate("/");
       })
       .catch((err) => {
-        setError(err.message);
+        setError(err.response.data.message);
       });
   };
 

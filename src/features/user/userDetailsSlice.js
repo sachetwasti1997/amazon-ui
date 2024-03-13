@@ -7,7 +7,7 @@ const initialState = {
   loading: false,
   error: null,
   isLogged: false,
-  fetchUserDataCalled: false
+  fetchUserDataCalled: false,
 };
 
 //generates pending, fullfilled and rejected action types
@@ -21,11 +21,25 @@ export const fetchUserData = createAsyncThunk("users/fetchData", async () => {
   return res.data;
 });
 
+//generates pending, fullfilled and rejected action types
+export const updateUserData = createAsyncThunk(
+  "users/updateData",
+  async (userData) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.put(API_BASE_PATH + "/user/edit", userData, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return res.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    fetchUserDataCall: (state, {payload}) => {
+    fetchUserDataCall: (state, { payload }) => {
       state.fetchUserDataCalled = payload;
     },
     logOutUser: (state) => {
@@ -33,26 +47,41 @@ const userSlice = createSlice({
       state.loading = false;
       state.isLogged = false;
       state.userData = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.pending, (state) => {
       state.loading = true;
-    })
+    });
     builder.addCase(fetchUserData.fulfilled, (state, action) => {
       state.loading = false;
       state.userData = action.payload;
       state.isLogged = true;
       state.error = null;
-    })
+    });
     builder.addCase(fetchUserData.rejected, (state, action) => {
       localStorage.removeItem("token");
       state.error = action.error.message;
       state.fetchUserDataCalled = false;
       state.loading = false;
       state.isLogged = false;
-      state.userData = {};
-    })
+      state.userData = null;
+    });
+    builder.addCase(updateUserData.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateUserData.fulfilled, (state, action) => {
+      state.loading = false;
+      state.userData = action.payload;
+      state.isLogged = true;
+      state.error = null;
+    });
+    builder.addCase(updateUserData.rejected, (state, action) => {
+      state.error = action.error.message;
+      state.fetchUserDataCalled = false;
+      state.loading = false;
+      state.isLogged = false;
+    });
   },
 });
 
