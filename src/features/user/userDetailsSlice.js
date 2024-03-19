@@ -35,6 +35,17 @@ export const updateUserData = createAsyncThunk(
   }
 );
 
+//generates pending, fullfilled and rejected action types
+export const addUserAddress = createAsyncThunk("users/address/add", async (data) => {
+  const token = localStorage.getItem("token");
+  const res = await axios.post(API_BASE_PATH + `/address/add/${data.userId}`, data, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+  return res.data;
+});
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -81,6 +92,18 @@ const userSlice = createSlice({
       state.fetchUserDataCalled = false;
       state.loading = false;
       state.isLogged = false;
+    });
+    builder.addCase(addUserAddress.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(addUserAddress.fulfilled, (state, action) => {
+      state.loading = false;
+      state.userData.addresses.push(action.payload);
+      state.error = null;
+    });
+    builder.addCase(addUserAddress.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
     });
   },
 });

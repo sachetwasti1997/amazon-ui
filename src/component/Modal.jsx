@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { MODAL_UPDATE_ACTION } from "../Constants";
+import { ADD_ADDRESS_ACTION, MODAL_UPDATE_ACTION } from "../Constants";
 import UserEdit from "./UserEdit";
 import { useSelector } from "react-redux";
+import Address from "./Address";
 
 export default function Modal({
   showModal,
@@ -35,6 +36,9 @@ export default function Modal({
                 <div className="p-20">
                   {modalAction === MODAL_UPDATE_ACTION && (
                     <UserEdit userData={userData} submit={submit} />
+                  )}
+                  {modalAction === ADD_ADDRESS_ACTION && (
+                    <Address action={ADD_ADDRESS_ACTION} submit={submit} userId={userData.id}/>
                   )}
                 </div>
                 {/*footer*/}

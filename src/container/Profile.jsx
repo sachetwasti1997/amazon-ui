@@ -7,6 +7,7 @@ import {
 import imag from "../assets/profile-default.avif";
 import Modal from "../component/Modal";
 import { ADD_ADDRESS_ACTION, MODAL_UPDATE_ACTION } from "../Constants";
+import AddressCard from "../component/AddressCard";
 
 const Profile = () => {
   const userData = useSelector((state) => state.userReducer.userData);
@@ -16,6 +17,8 @@ const Profile = () => {
     (state) => state.userReducer.fetchUserDataCalled
   );
   const dispatch = useDispatch();
+
+  console.log(userData?.addresses);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,6 +30,8 @@ const Profile = () => {
       dispatch(fetchUserData());
     }
   }, []);
+
+  const addArr = userData?.addresses ? userData.addresses.slice().sort((a, b) => b.primaryAddress - a.primaryAddress) : [];
 
   return (
     <div class="m-16 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
@@ -79,6 +84,9 @@ const Profile = () => {
         modalAction={modalAction}
         userData={userData}
       />
+      <div className="grid grid-cols-4 gap-2 mt-7">
+        {addArr.map((address) => <AddressCard address={address} />)}
+      </div>
     </div>
   );
 };

@@ -6,6 +6,10 @@ export const EMAIL = "email";
 export const PASSWORD = "password";
 export const COUNTRY_CODE = "countryCode";
 export const PHONE = "phone";
+export const LINE_ONE = "lineOne";
+export const LINE_TWO = "lineTwo";
+export const ZIP_CODE = "zipCode";
+export const ADDRESS_TYPE = "addressType";
 
 export const navLinks = [
   { id: 1, name: "HOME", value: "/" },
@@ -16,3 +20,4 @@ export const navLinks = [
 
 export const MODAL_UPDATE_ACTION = "Update Profile";
 export const ADD_ADDRESS_ACTION = "Add Address";
+export const EDIT_ADDRESS_ACTION = "Edit Address";
