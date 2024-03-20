@@ -18,13 +18,8 @@ const Profile = () => {
   );
   const dispatch = useDispatch();
 
-  console.log(userData?.addresses);
-
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token);
-    console.log(fetchUserDataCalled);
-    console.log(userData);
     if (token && !userData && !fetchUserDataCalled) {
       dispatch(fetchUserDataCall(true));
       dispatch(fetchUserData());
@@ -34,27 +29,27 @@ const Profile = () => {
   const addArr = userData?.addresses ? userData.addresses.slice().sort((a, b) => b.primaryAddress - a.primaryAddress) : [];
 
   return (
-    <div class="m-16 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
-      <div class="rounded-t-lg h-32 overflow-hidden">
+    <div className="m-16 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
+      <div className="rounded-t-lg h-32 overflow-hidden">
         <img
-          class="object-cover object-top w-full"
+          className="object-cover object-top w-full"
           src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
           alt="Mountain"
         />
       </div>
-      <div class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
+      <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
         <img
-          class="object-cover object-center h-32"
+          className="object-cover object-center h-32"
           src={userData?.profileImage ? userData.profileImage : imag}
           alt="Profile Image"
         />
       </div>
-      <div class="text-center mt-2">
-        <h2 class="font-semibold">
+      <div className="text-center mt-2">
+        <h2 className="font-semibold">
           {userData?.firstName} {userData?.lastName}
         </h2>
-        <p class="text-gray-500">{userData?.email}</p>
-        <p class="text-gray-500">
+        <p className="text-gray-500">{userData?.email}</p>
+        <p className="text-gray-500">
           {userData?.countryCode} {userData?.phone}
         </p>
       </div>
@@ -82,10 +77,12 @@ const Profile = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         modalAction={modalAction}
-        userData={userData}
+        data={userData}
       />
       <div className="grid grid-cols-4 gap-2 mt-7">
-        {addArr.map((address) => <AddressCard address={address} />)}
+        {addArr.map((address) => (
+          <AddressCard key={address?.id} address={address} />
+        ))}
       </div>
     </div>
   );

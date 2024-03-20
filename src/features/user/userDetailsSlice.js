@@ -26,7 +26,44 @@ export const updateUserData = createAsyncThunk(
   "users/updateData",
   async (userData) => {
     const token = localStorage.getItem("token");
-    const res = await axios.put(API_BASE_PATH + "/user/edit", userData, {
+    console.log(userData.passwordUpdate);
+    const res = await axios.put(
+      API_BASE_PATH + `/user/edit/${userData.passwordUpdate}`,
+      userData.userDataSubmit,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return res.data;
+  }
+);
+
+//generates pending, fullfilled and rejected action types
+export const addUserAddress = createAsyncThunk(
+  "users/address/add",
+  async (data) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      API_BASE_PATH + `/address/add/${data.userId}`,
+      data,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return res.data;
+  }
+);
+
+//generates pending, fullfilled and rejected action types
+export const editUserAddress = createAsyncThunk(
+  "users/address/edit",
+  async (data) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.put(API_BASE_PATH + `/address/edit`, data, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -36,15 +73,18 @@ export const updateUserData = createAsyncThunk(
 );
 
 //generates pending, fullfilled and rejected action types
-export const addUserAddress = createAsyncThunk("users/address/add", async (data) => {
-  const token = localStorage.getItem("token");
-  const res = await axios.post(API_BASE_PATH + `/address/add/${data.userId}`, data, {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
-  return res.data;
-});
+export const deleteUserAddress = createAsyncThunk(
+  "users/address/delete",
+  async (addressId) => {
+    const token = localStorage.getItem("token");
+    const res = await axios.delete(API_BASE_PATH + `/address/${addressId}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return res.data;
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -63,6 +103,7 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.pending, (state) => {
       state.loading = true;
+      state.error = null;
     });
     builder.addCase(fetchUserData.fulfilled, (state, action) => {
       state.loading = false;
@@ -80,9 +121,12 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUserData.pending, (state, action) => {
       state.loading = true;
+      state.error = null;
     });
     builder.addCase(updateUserData.fulfilled, (state, action) => {
       state.loading = false;
+      const addresses = state.userData.addresses;
+      action.payload.addresses = addresses;
       state.userData = action.payload;
       state.isLogged = true;
       state.error = null;
@@ -95,6 +139,7 @@ const userSlice = createSlice({
     });
     builder.addCase(addUserAddress.pending, (state, action) => {
       state.loading = true;
+      state.error = null;
     });
     builder.addCase(addUserAddress.fulfilled, (state, action) => {
       state.loading = false;
@@ -102,6 +147,40 @@ const userSlice = createSlice({
       state.error = null;
     });
     builder.addCase(addUserAddress.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(editUserAddress.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(editUserAddress.fulfilled, (state, action) => {
+      state.loading = false;
+      const addrList = state.userData.addresses.filter(
+        (addr) => addr.id !== action.payload.id
+      );
+      addrList.push(action.payload);
+      addrList.sort((a, b) => b - a);
+      state.userData.addresses = addrList;
+      state.error = null;
+    });
+    builder.addCase(editUserAddress.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+    builder.addCase(deleteUserAddress.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(deleteUserAddress.fulfilled, (state, action) => {
+      state.loading = false;
+      const addrList = state.userData.addresses.filter(
+        (addr) => addr.id !== action.payload
+      );
+      state.userData.addresses = addrList;
+      state.error = null;
+    });
+    builder.addCase(deleteUserAddress.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });

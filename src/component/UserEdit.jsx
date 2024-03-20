@@ -10,13 +10,14 @@ import {
 import { useDispatch } from "react-redux";
 import { updateUserData } from "../features/user/userDetailsSlice";
 
-const UserEdit = ({ userData, submit }) => {
+const UserEdit = ({ userData, submit, setSubmit }) => {
   const [firstName, setFirstName] = useState(userData.firstName);
   const [lastName, setLastName] = useState(userData.lastName);
   const [email, setEmail] = useState(userData.email);
   const [password, setPassword] = useState(userData.password);
   const [countryCode, setCountryCode] = useState(userData.countryCode);
   const [phone, setPhone] = useState(userData.phone);
+  const [passwordUpdate, setPasswordUpdate] = useState("NO");
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
@@ -31,8 +32,9 @@ const UserEdit = ({ userData, submit }) => {
       phone: phone ? phone : "",
       countryCode: countryCode ? countryCode : "",
     };
-    console.log(userDataSubmit);
-    dispatch(updateUserData(userDataSubmit));
+    dispatch(updateUserData({userDataSubmit, passwordUpdate}));
+    setPasswordUpdate("NO");
+    setSubmit(false);
   };
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const UserEdit = ({ userData, submit }) => {
         break;
       case PASSWORD:
         setPassword(value);
+        setPasswordUpdate("YES");
         break;
       case COUNTRY_CODE:
         setCountryCode(value);

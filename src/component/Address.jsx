@@ -8,15 +8,13 @@ import {
 } from "../Constants";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addUserAddress } from "../features/user/userDetailsSlice";
+import { addUserAddress, editUserAddress } from "../features/user/userDetailsSlice";
 
-const Address = ({ action, editData, userId, submit }) => {
-  const [lineOne, setLineOne] = useState(editData?.lineOne);
-  const [lineTwo, setLineTwo] = useState(editData?.lineTwo);
-  const [zipCode, setZipCode] = useState(editData?.zipCode);
-  const [primaryAddress, setPrimaryAddress] = useState(
-    editData?.primaryAddress
-  );
+const Address = ({ action, address, userId, submit, setSubmit }) => {
+  const [lineOne, setLineOne] = useState(address?.lineOne);
+  const [lineTwo, setLineTwo] = useState(address?.lineTwo);
+  const [zipCode, setZipCode] = useState(address?.postalCode);
+  const [primaryAddress, setPrimaryAddress] = useState(address?.primaryAddress);
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
@@ -24,7 +22,15 @@ const Address = ({ action, editData, userId, submit }) => {
     if (!submit) {
       return;
     }
+    console.log(submit);
     if (action === EDIT_ADDRESS_ACTION) {
+      dispatch(editUserAddress({
+        id: address.id,
+        lineOne,
+        lineTwo,
+        primaryAddress,
+        postalCode: zipCode,
+      }));
     } else {
       dispatch(
         addUserAddress({
@@ -36,6 +42,7 @@ const Address = ({ action, editData, userId, submit }) => {
         })
       );
     }
+    setSubmit(false);
   };
 
   const inputChangeHandler = (event, eventName) => {
@@ -60,7 +67,7 @@ const Address = ({ action, editData, userId, submit }) => {
   };
 
   useEffect(() => {
-    handleSubmit();
+    if(submit)handleSubmit();
   }, [submit]);
 
   return (
@@ -84,18 +91,18 @@ const Address = ({ action, editData, userId, submit }) => {
 
       <div className="flex gap-2">
         <input
-          type="number"
-          placeholder="Primary(0/1)"
+          type="text"
+          placeholder="Primary(YES/NO)"
           defaultValue={action === EDIT_ADDRESS_ACTION ? primaryAddress : ""}
           onChange={(e) => inputChangeHandler(e, ADDRESS_TYPE)}
-          className="w-full basis-1/4 text-black py-2 ml-1 my-2 bg-transparent border-b outline-none focus:outline-none"
+          className="w-full text-black py-2 ml-1 my-2 bg-transparent border-b outline-none focus:outline-none"
         />
         <input
           type="number"
           placeholder="Zip Code"
           defaultValue={action === EDIT_ADDRESS_ACTION ? zipCode : ""}
           onChange={(e) => inputChangeHandler(e, ZIP_CODE)}
-          className="w-full basis-3/4 text-black py-2 ml-1 my-2 bg-transparent border-b outline-none focus:outline-none"
+          className="w-full text-black py-2 ml-1 my-2 bg-transparent border-b outline-none focus:outline-none"
         />
       </div>
     </div>

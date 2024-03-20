@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ADD_ADDRESS_ACTION, MODAL_UPDATE_ACTION } from "../Constants";
+import { ADD_ADDRESS_ACTION, EDIT_ADDRESS_ACTION, MODAL_UPDATE_ACTION } from "../Constants";
 import UserEdit from "./UserEdit";
 import { useSelector } from "react-redux";
 import Address from "./Address";
@@ -8,10 +8,11 @@ export default function Modal({
   showModal,
   setShowModal,
   modalAction,
-  userData,
+  data,
 }) {
   const [submit, setSubmit] = useState(false);
   const error = useSelector(state => state.userReducer.error)
+  
   return (
     <>
       {showModal ? (
@@ -35,10 +36,10 @@ export default function Modal({
                 </div>
                 <div className="p-20">
                   {modalAction === MODAL_UPDATE_ACTION && (
-                    <UserEdit userData={userData} submit={submit} />
+                    <UserEdit userData={data} submit={submit} setSubmit={setSubmit}/>
                   )}
-                  {modalAction === ADD_ADDRESS_ACTION && (
-                    <Address action={ADD_ADDRESS_ACTION} submit={submit} userId={userData.id}/>
+                  {(modalAction === ADD_ADDRESS_ACTION || modalAction === EDIT_ADDRESS_ACTION) && (
+                    <Address action={modalAction} submit={submit} userId={data?.id} address={data} setSubmit={setSubmit}/>
                   )}
                 </div>
                 {/*footer*/}
