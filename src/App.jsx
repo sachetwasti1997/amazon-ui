@@ -8,6 +8,7 @@ import Profile from "./container/Profile";
 import Nav from "./component/Nav";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData, fetchUserDataCall, setToken } from "./features/user/userDetailsSlice";
+import Products from "./container/Products";
 
 const App = () => {
   const isLogged = useSelector((state) => state.userReducer.isLogged);
@@ -37,7 +38,7 @@ const App = () => {
           <Route path="/orders" element={<Orders />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment/:id" element={<PaymentForm />} />
-          <Route path="/product/:id" />
+          <Route path="/product" element={<Products/>}/>
         </>
   );
 

@@ -13,7 +13,7 @@ export const ADDRESS_TYPE = "addressType";
 
 export const navLinks = [
   { id: 1, name: "HOME", value: "/" },
-  { id: 2, name: "PRODUCTS", value: "/products" },
+  { id: 2, name: "PRODUCTS", value: "/product" },
   { id: 3, name: "ORDERS", value: "/orders" },
   { id: 4, name: "PROFILE", value: "/profile" },
 ];
