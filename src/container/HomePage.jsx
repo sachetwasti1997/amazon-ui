@@ -12,21 +12,13 @@ const HomePage = (props) => {
   const isLogged = useSelector(state => state.userReducer.isLogged);
   const dispatch = useDispatch();
 
-  useState(() => {
-    const token = localStorage.getItem("token");
-    if (token && !userData && !fetchUserDataCalled) {
-      dispatch(fetchUserDataCall(true))
-      dispatch(fetchUserData());
-    }
-  }, []);
+  console.log(userData);
+  console.log(isLogged);
 
   return (
     <div>
-      {isLogged ? (
-        <Home user={userData}/>
-      ) : (
-        "You are not logged in LOG IN TO CONTINUE"
-      )}
+      {isLogged && <Home user={userData}/>}
+      {!isLogged && <p>You are not logged in please log in to continue!</p>}
       {/* <Home/> */}
     </div>
   );

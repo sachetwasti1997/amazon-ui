@@ -2,19 +2,13 @@ import { useEffect, useState } from "react";
 import img from "../assets/logsign.jpg";
 import Login from "../component/Login";
 import SignUp from "../component/SignUp";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
-  const [logged, setLogged] = useState();
   const [logInPage, setLogInPage] = useState(true);
+  const isLogged = useSelector((state) => state.userReducer.isLogged);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
-    }
-  }, []);
 
   const changePage = () => {
     setLogInPage(!logInPage);

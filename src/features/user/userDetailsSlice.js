@@ -3,6 +3,7 @@ import { API_BASE_PATH } from "../../Constants";
 import axios from "axios";
 
 const initialState = {
+  token: null,
   userData: null,
   loading: false,
   error: null,
@@ -99,6 +100,10 @@ const userSlice = createSlice({
       state.isLogged = false;
       state.userData = null;
     },
+    setToken: (state, {payload}) => {
+      localStorage.setItem("token", payload);
+      state.token = payload;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.pending, (state) => {
@@ -187,6 +192,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { fetchUserDataCall, logOutUser } = userSlice.actions;
+export const { fetchUserDataCall, logOutUser, setToken } = userSlice.actions;
 
 export default userSlice.reducer;

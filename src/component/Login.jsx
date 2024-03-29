@@ -2,12 +2,15 @@ import { useState } from "react";
 import { API_BASE_PATH, EMAIL, PASSWORD } from "../Constants";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setToken } from "../features/user/userDetailsSlice";
 
 const Login = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const login = (e) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ const Login = (props) => {
       .post(API_BASE_PATH+"/user/login", request)
       .then((res) => {
         const token = res.data;
-        localStorage.setItem("token", token);
+        dispatch(setToken(token));
         navigate("/");
       })
       .catch((err) => {

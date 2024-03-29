@@ -1,30 +1,57 @@
 import { Route, Routes } from "react-router-dom";
 import PaymentForm from "./component/PaymentForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SignUpForm from "./container/SignUpForm";
 import HomePage from "./container/HomePage";
 import Orders from "./container/Orders";
 import Profile from "./container/Profile";
 import Nav from "./component/Nav";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData, fetchUserDataCall, setToken } from "./features/user/userDetailsSlice";
 
 const App = () => {
   const isLogged = useSelector((state) => state.userReducer.isLogged);
-  const token = localStorage.getItem("token");
+  const token = useSelector((state) => state.userReducer.token);
+  const userData = useSelector((state) => state.userReducer.userData);
+  const fetchUserDataCalled = useSelector(
+    (state) => state.userReducer.fetchUserDataCalled
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if(token)
+      dispatch(setToken(token));
+  }, []);
+
+  useEffect(() => {
+    const tokenR = token ? token : localStorage.getItem("token");
+    if (tokenR && !userData && !fetchUserDataCalled) {
+      dispatch(fetchUserDataCall(true));
+      dispatch(fetchUserData());
+    }
+  }, [token]);
+
+  const routes = (
+        <>
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/payment/:id" element={<PaymentForm />} />
+          <Route path="/product/:id" />
+        </>
+  );
+
+  const routesNotLogged = (
+      <Route path="/signup" element={<SignUpForm />} />
+  );
 
   return (
     <div>
-      <Nav/>
+      <Nav />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        {!isLogged && <Route path="/signup" element={<SignUpForm />} />}
-        {(isLogged || token) && (
-          <>
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/payment/:id" element={<PaymentForm />} />
-          </>
-        )}
+        {isLogged && routes}
+        {!isLogged && routesNotLogged}
       </Routes>
     </div>
   );

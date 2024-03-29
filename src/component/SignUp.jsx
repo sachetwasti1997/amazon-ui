@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { API_BASE_PATH, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD } from "../Constants";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setToken } from "../features/user/userDetailsSlice";
 
 const SignUp = (props) => {
   const [firstName, setFirstName] = useState("");
@@ -11,6 +13,7 @@ const SignUp = (props) => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -28,8 +31,8 @@ const SignUp = (props) => {
       .post(API_BASE_PATH + "/user/signup", signUpRequest)
       .then((res) => {
         const token = res.data;
-        localStorage.setItem("token", token);
-        navigate("/");
+        dispatch(setToken(token));
+        navigate("/")
       })
       .catch((err) => {
         setError(err.response.data.message);

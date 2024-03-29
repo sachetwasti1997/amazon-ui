@@ -17,11 +17,10 @@ const Home = ({ user }) => {
   console.log(product);
   return (
     <>
-      <div className="h-screen w-screen bg-cyan-100 p-2">
-        <p className="w-[100%]">{user?.email}</p>
+      <div className="h-screen w-screen p-2">
         <div className="grid grid-cols-4 gap-2 mt-7">
           {product?.map((p) => (
-            <ProductCard product={p}/>
+            <ProductCard key={p.id} product={p}/>
           ))}
         </div>
       </div>
