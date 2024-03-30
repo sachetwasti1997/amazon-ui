@@ -6,13 +6,32 @@ const initialState = {
   products: [],
   loading: false,
   error: null,
+  myProducts: [],
+  isAllProductFetched: false,
+  myProductFetched: false,
 };
 
 export const fetchProducts = createAsyncThunk(
   "products/fetch",
-  async (userId) => {
-    const token = localStorage.getItem("token");
-    const res = await axios.get(API_BASE_PATH + `/item/items/${userId}`, {
+  async (userToken) => {
+    const token = userToken.token;
+    const res = await axios.get(
+      API_BASE_PATH + `/item/items/${userToken.userId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return res.data;
+  }
+);
+
+export const fetchUserProducts = createAsyncThunk(
+  "self/products/fetch",
+  async (userToken) => {
+    const token = userToken.token;
+    const res = await axios.get(API_BASE_PATH + `/item/${userToken.userId}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -24,7 +43,14 @@ export const fetchProducts = createAsyncThunk(
 const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    fetchAllProductCall: (state, {payload}) => {
+      state.isAllProductFetched = payload;
+    },
+    fetchMyProductCall: (state, {payload}) => {
+      state.myProductFetched = payload;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state) => {
       state.loading = true;
@@ -40,7 +66,21 @@ const productSlice = createSlice({
       state.error = action.error.message;
       state.products = [];
     });
+    builder.addCase(fetchUserProducts.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchUserProducts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.myProducts = action.payload;
+    });
+    builder.addCase(fetchUserProducts.rejected, (state, action) => {
+      state.loading = true;
+      state.error = action.error.message;
+      state.myProducts = [];
+    });
   },
 });
-
+export const {fetchAllProductCall, fetchMyProductCall} = productSlice.actions;
 export default productSlice.reducer;

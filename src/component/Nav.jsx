@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserDataCall, logOutUser } from "../features/user/userDetailsSlice";
 import React, { useEffect, useState } from "react";
+import { fetchAllProductCall } from "../features/products/productsSlice";
 
 const Nav = () => {
   const logged = useSelector((state) => state.userReducer.isLogged);
@@ -16,6 +17,7 @@ const Nav = () => {
     // props.setSignUpPage(true);
     dispatch(logOutUser());
     dispatch(fetchUserDataCall(false));
+    dispatch(fetchAllProductCall(false));
   };
 
   const signInClicked = () => {

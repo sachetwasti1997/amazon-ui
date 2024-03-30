@@ -1,20 +1,24 @@
 import { useEffect } from "react";
 import Nav from "./Nav";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../features/products/productsSlice";
+import { fetchAllProductCall, fetchProducts } from "../features/products/productsSlice";
 import ProductCard from "./ProductCard";
 
 const Home = ({ user }) => {
   const product = useSelector(state => state.productReducer.products);
+  const isAllProductFetched = useSelector(state => state.productReducer.isAllProductFetched);
+  const token = useSelector(state => state.userReducer.token);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("HERE");
-    dispatch(fetchProducts(user?.id));
+    dispatch(fetchAllProductCall(true));
+    if(!isAllProductFetched) {
+      dispatch(fetchProducts({userId: user?.id, token}));
+    }
   }, [user]);
 
-  console.log(product);
   return (
     <>
       <div className="h-screen w-screen p-2">
