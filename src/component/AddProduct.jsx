@@ -1,15 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { API_BASE_PATH } from "../Constants";
-import {
-  fetchMyProductCall,
-  fetchProducts,
-  fetchUserProducts,
-} from "../features/products/productsSlice";
-import ProductCard from "./ProductCard";
+import { addMyProducts } from "../features/products/productsSlice";
+import { useNavigate } from "react-router-dom";
 
-const AddProduct = () => {
+const AddProduct = ({submit}) => {
   const NAME = "name",
     DESCRIPTION = "description",
     CATEGORY = "category",
@@ -21,37 +17,15 @@ const AddProduct = () => {
 
   const token = useSelector((state) => state.userReducer.token);
   const userData = useSelector((state) => state.userReducer.userData);
-  const myProducts = useSelector((state) => state.productReducer.myProducts);
-  const fetchCalled = useSelector(
-    (state) => state.productReducer.myProductFetched
-  );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!fetchCalled) {
-      dispatch(fetchMyProductCall(true));
-      dispatch(fetchUserProducts({ userId: userData.id, token }));
-    }
-  }, []);
-
-  const onEditSelect = (product) => {
-    setProductName(product.productName);
-    setProductDescription(product.productDescription);
-    setPrice(product.price);
-    setTotalQuantity(product.totalQuantity);
-    setCategory(product.category);
-    setImageURL(product.imageURL);
-    setId(product.id);
-  };
-
-  const [id, setId] = useState(null);
   const [imageToSend, setImage] = useState(null);
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [totalQuantity, setTotalQuantity] = useState("");
-  const [imageURL, setImageURL] = useState([]);
 
   const isSubmitDisabled = () => {
     return (
@@ -64,7 +38,7 @@ const AddProduct = () => {
     );
   };
 
-  const submit = () => {
+  const submitAction = () => {
     const request = {
       productName,
       productDescription,
@@ -73,12 +47,6 @@ const AddProduct = () => {
       totalQuantity,
       userId: userData.id
     };
-    if(id) {
-        request['id'] = id;
-    }
-    if (imageURL) {
-        request['imageURL'] = imageURL;
-    }
     const json = JSON.stringify(request);
     const blob = new Blob([json], {
       type: "application/json",
@@ -95,12 +63,8 @@ const AddProduct = () => {
         },
       })
       .then((res) => {
-        setImage(null);
-        setProductName("");
-        setProductDescription("");
-        setCategory("");
-        setPrice(0);
-        setTotalQuantity(0);
+        dispatch(addMyProducts(res.data));
+        navigate("/product");
       });
   };
 
@@ -132,7 +96,7 @@ const AddProduct = () => {
   };
 
   return (
-    <>
+    <div className="m-10 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
       <h1 className="text-left text-4xl mb-5">Product Information</h1>
       <div className="flex justify-between">
         <label>
@@ -195,22 +159,12 @@ const AddProduct = () => {
       </div>
       <button
         className="w-full bg-blue-500 hover:bg-blue-700 text-white my-2 font-semibold  rounded-md p-4 text-center items-center justify-center"
-        onClick={submit}
+        onClick={submitAction}
         disabled={isSubmitDisabled()}
       >
         Submit
       </button>
-      <div className="grid grid-cols-4 gap-2 mt-7">
-        {myProducts?.map((p) => (
-          <ProductCard
-            onEditSelect={onEditSelect}
-            isEditAction={true}
-            key={p.id}
-            product={p}
-          />
-        ))}
-      </div>
-    </>
+    </div>
   );
 };
 

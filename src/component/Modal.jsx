@@ -36,10 +36,21 @@ export default function Modal({
                 </div>
                 <div className="p-20">
                   {modalAction === MODAL_UPDATE_ACTION && (
-                    <UserEdit userData={data} submit={submit} setSubmit={setSubmit}/>
+                    <UserEdit
+                      userData={data}
+                      submit={submit}
+                      setSubmit={setSubmit}
+                    />
                   )}
-                  {(modalAction === ADD_ADDRESS_ACTION || modalAction === EDIT_ADDRESS_ACTION) && (
-                    <Address action={modalAction} submit={submit} userId={data?.id} address={data} setSubmit={setSubmit}/>
+                  {(modalAction === ADD_ADDRESS_ACTION ||
+                    modalAction === EDIT_ADDRESS_ACTION) && (
+                    <Address
+                      action={modalAction}
+                      submit={submit}
+                      userId={data?.id}
+                      address={data}
+                      setSubmit={setSubmit}
+                    />
                   )}
                 </div>
                 {/*footer*/}

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData, fetchUserDataCall, setToken } from "./features/user/userDetailsSlice";
 import Products from "./container/Products";
 import ProductPage from "./component/ProductPage";
+import AddProduct from "./component/AddProduct";
 
 const App = () => {
   const isLogged = useSelector((state) => state.userReducer.isLogged);
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/payment/:id" element={<PaymentForm />} />
           <Route path="/product" element={<Products/>}/>
           <Route path="/product/:id" element={<ProductPage/>}/>
+          <Route path="/product/add" element={<AddProduct/>}/>
         </>
   );
 

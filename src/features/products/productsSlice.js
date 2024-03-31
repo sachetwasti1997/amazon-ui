@@ -49,6 +49,9 @@ const productSlice = createSlice({
     },
     fetchMyProductCall: (state, {payload}) => {
       state.myProductFetched = payload;
+    },
+    addMyProducts: (state, {payload}) => {
+      state.myProducts.unshift(payload);
     }
   },
   extraReducers: (builder) => {
@@ -82,5 +85,5 @@ const productSlice = createSlice({
     });
   },
 });
-export const {fetchAllProductCall, fetchMyProductCall} = productSlice.actions;
+export const {fetchAllProductCall, fetchMyProductCall, addMyProducts} = productSlice.actions;
 export default productSlice.reducer;

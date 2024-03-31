@@ -21,3 +21,4 @@ export const navLinks = [
 export const MODAL_UPDATE_ACTION = "Update Profile";
 export const ADD_ADDRESS_ACTION = "Add Address";
 export const EDIT_ADDRESS_ACTION = "Edit Address";
+export const ADD_PRODUCT_ACTION = "Add Product";
