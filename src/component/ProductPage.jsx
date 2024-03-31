@@ -10,6 +10,7 @@ const ProductPage = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
 
   const token = useSelector(state => state.userReducer.token);
+  const user = useSelector(state => state.userReducer.userData);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,16 +24,21 @@ const ProductPage = ({ product }) => {
   const handleSubmit = () => {
     const itemPrice = parseInt(quantity) * parseInt(product.price);
     const request = {
-      userEmail: product.userEmail,
+      sellerEmail: product.userEmail,
+      sellerContact: product.userContact,
+      userEmail: user.email,
+      userContact: user.countryCode + " " + user.phone,
+      itemImage: product.imageURL[0],
       itemId: product.id,
+      itemTitle: product.productName,
       quantity,
-      itemPrice
+      itemPrice,
     };
     axios.post(API_BASE_PATH + "/order/create", request, {
       headers: {
         Authorization: "Bearer " + token,
       },
-    }).then(res => navigate(`/order/${res.data.id}`));
+    }).then(res => navigate(`/order/${res.data.id}`, {state: {order: res.data}}));
   };
 
   const onChangeHandler = (e) => {

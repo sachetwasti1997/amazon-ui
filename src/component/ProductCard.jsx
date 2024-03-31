@@ -13,7 +13,7 @@ const ProductCard = ({ product, isEditAction, onEditSelect }) => {
       className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow"
       onClick={() => {
         !isEditAction && navigate(`/product/${product.id}`);
-        isEditAction && onEditSelect(product)
+        isEditAction && onEditSelect(product);
       }}
     >
       <img className="w-full h-48 object-cover" src={image} />
@@ -26,12 +26,12 @@ const ProductCard = ({ product, isEditAction, onEditSelect }) => {
       </p>
       <div className="flex gap-2">
         <p className="mb-3 font-normal text-gray-700">
-          <bold>Price:</bold>
-          {product?.price}
+            <span className="font-bold">Price:$ </span>
+            {product?.price}
         </p>
         <p className="mb-3 font-normal text-gray-700">
-          <bold>Quantity:</bold>
-          {product?.totalQuantity}
+            <span className='font-bold'>Quantity: </span>
+            {product?.totalQuantity}
         </p>
       </div>
     </div>

@@ -4,7 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserDataCall, logOutUser } from "../features/user/userDetailsSlice";
 import React, { useEffect, useState } from "react";
-import { fetchAllProductCall } from "../features/products/productsSlice";
+import { fetchAllProductCall, fetchMyProductCall } from "../features/products/productsSlice";
+import { fetchMyOrderCall } from "../features/orders/ordersSlice";
 
 const Nav = () => {
   const logged = useSelector((state) => state.userReducer.isLogged);
@@ -18,6 +19,8 @@ const Nav = () => {
     dispatch(logOutUser());
     dispatch(fetchUserDataCall(false));
     dispatch(fetchAllProductCall(false));
+    dispatch(fetchMyProductCall(false));
+    dispatch(fetchMyOrderCall(false));
   };
 
   const signInClicked = () => {
