@@ -1,6 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
-import { API_BASE_PATH, EMAIL, FIRST_NAME, LAST_NAME, PASSWORD } from "../Constants";
+import {
+  API_BASE_PATH,
+  COUNTRY_CODE,
+  EMAIL,
+  FIRST_NAME,
+  LAST_NAME,
+  PASSWORD,
+  PHONE,
+} from "../Constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setToken } from "../features/user/userDetailsSlice";
@@ -9,6 +17,8 @@ const SignUp = (props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [countryCode, setCountryCode] = useState();
+  const [phone, setPhone] = useState();
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
@@ -26,13 +36,15 @@ const SignUp = (props) => {
       lastName,
       email,
       password,
+      countryCode,
+      phone
     };
     axios
       .post(API_BASE_PATH + "/user/signup", signUpRequest)
       .then((res) => {
         const token = res.data;
         dispatch(setToken(token));
-        navigate("/")
+        navigate("/");
       })
       .catch((err) => {
         setError(err.response.data.message);
@@ -55,6 +67,12 @@ const SignUp = (props) => {
         break;
       case PASSWORD:
         setPassword(value);
+        break;
+      case COUNTRY_CODE:
+        setCountryCode(value);
+        break;
+      case PHONE:
+        setPhone(value);
         break;
       default:
         break;
@@ -95,6 +113,21 @@ const SignUp = (props) => {
             onChange={(e) => inputChangeHandler(e, EMAIL)}
             className="w-full text-black py-2 my-2 bg-transparent border-b outline-none focus:outline-none"
           />
+
+          <div className="flex gap-3">
+            <input
+              type="number"
+              placeholder="Ph Code"
+              onChange={(e) => inputChangeHandler(e, COUNTRY_CODE)}
+              className="w-1/3 text-black py-2 my-2 bg-transparent border-b outline-none focus:outline-none"
+            />
+            <input
+              type="number"
+              placeholder="Phone"
+              onChange={(e) => inputChangeHandler(e, PHONE)}
+              className="w-2/3 text-black py-2 my-2 bg-transparent border-b outline-none focus:outline-none"
+            />
+          </div>
 
           <input
             type="password"

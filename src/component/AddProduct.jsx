@@ -5,7 +5,7 @@ import { API_BASE_PATH } from "../Constants";
 import { addMyProducts } from "../features/products/productsSlice";
 import { useNavigate } from "react-router-dom";
 
-const AddProduct = ({submit}) => {
+const AddProduct = ({ submit }) => {
   const NAME = "name",
     DESCRIPTION = "description",
     CATEGORY = "category",
@@ -45,7 +45,9 @@ const AddProduct = ({submit}) => {
       category,
       price,
       totalQuantity,
-      userId: userData.id
+      userId: userData.id,
+      userEmail: userData.email,
+      userContact: userData.countryCode +" "+ userData.phone,
     };
     const json = JSON.stringify(request);
     const blob = new Blob([json], {
