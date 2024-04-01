@@ -47,7 +47,7 @@ const AddProduct = ({ submit }) => {
       totalQuantity,
       userId: userData.id,
       userEmail: userData.email,
-      userContact: userData.countryCode +" "+ userData.phone,
+      userContact: userData.countryCode + " " + userData.phone,
     };
     const json = JSON.stringify(request);
     const blob = new Blob([json], {
@@ -103,7 +103,15 @@ const AddProduct = ({ submit }) => {
       <div className="flex justify-between">
         <label>
           <h1 className="text-left text-xl">Product Image</h1>
-          <input type="file" onChange={(e) => onChangeHandler(e, IMAGE)} />
+          <input
+            type="file"
+            className="file:mr-5 file:py-1 file:px-3 file:border-[1px]
+            file:text-xs file:font-medium
+          file:bg-blue-500 file:text-white
+            hover:file:cursor-pointer hover:file:bg-blue-700
+          hover:file:text-white file:rounded-md file:h-10"
+            onChange={(e) => onChangeHandler(e, IMAGE)}
+          />
         </label>
         <img
           src={imageToSend ? URL.createObjectURL(imageToSend) : null}

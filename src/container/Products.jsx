@@ -37,7 +37,7 @@ const Products = () => {
       <div className="grid grid-cols-4 gap-2 mt-7">
         {myProducts?.map((p) => (
           <ProductCard
-            onEditSelect={() => console.log(`Selected ${JSON.stringify(p)}`)}
+            onEditSelect={() => navigate(`/product/edit/${p.id}`)}
             isEditAction={true}
             key={p.id}
             product={p}

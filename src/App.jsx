@@ -43,6 +43,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment/:id" element={<PaymentForm />} />
           <Route path="/product" element={<Products/>}/>
+          <Route path="/product/edit/:id" element={<ProductDetails isEdit={true}/>}/>
           <Route path="/product/:id" element={<ProductDetails/>}/>
           <Route path="/product/add" element={<AddProduct/>}/>
         </>

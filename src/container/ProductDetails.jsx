@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { API_BASE_PATH } from "../Constants";
 import ProductPage from '../component/ProductPage';
 
-const ProductDetails = () => {
+const ProductDetails = ({isEdit}) => {
     const [productToDisplay, setProductToDisplay] = useState(null);
     const product = useSelector((state) => state.productReducer.products);
     const params = useParams();
