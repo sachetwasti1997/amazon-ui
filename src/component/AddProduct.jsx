@@ -13,7 +13,7 @@ const AddProduct = ({ submit }) => {
     QUANTITY = "quantity",
     IMAGE = "image";
 
-  const OPTIONS = ["Select One", "Cosmetics", "Electronics"];
+  const OPTIONS = ["SELECT ONE", "COSMETICS", "ELECTRONICS"];
 
   const token = useSelector((state) => state.userReducer.token);
   const userData = useSelector((state) => state.userReducer.userData);
@@ -160,7 +160,6 @@ const AddProduct = ({ submit }) => {
             onChange={(e) => onChangeHandler(e, CATEGORY)}
             defaultValue={category}
           >
-            <option>SELECT ONE</option>
             {OPTIONS.map((optionNm, index) => (
               <option key={index}>{optionNm}</option>
             ))}

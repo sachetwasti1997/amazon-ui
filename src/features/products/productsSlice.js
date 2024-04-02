@@ -40,6 +40,14 @@ export const fetchUserProducts = createAsyncThunk(
   }
 );
 
+export const addImage = createAsyncThunk(
+  "product/add/image",
+  async (photoToken) => {
+    const token = photoToken.token;
+    const formData = photoToken.formData;
+  }
+) 
+
 const productSlice = createSlice({
   name: "product",
   initialState,
@@ -52,6 +60,11 @@ const productSlice = createSlice({
     },
     addMyProducts: (state, {payload}) => {
       state.myProducts.unshift(payload);
+    },
+    updateProduct: (state, {payload}) => {
+      const products = state.myProducts;
+      products.map(pro => pro.id === payload.id ? payload : pro);
+      state.myProducts = products;
     }
   },
   extraReducers: (builder) => {
@@ -85,5 +98,5 @@ const productSlice = createSlice({
     });
   },
 });
-export const {fetchAllProductCall, fetchMyProductCall, addMyProducts} = productSlice.actions;
+export const {fetchAllProductCall, fetchMyProductCall, addMyProducts, updateProduct} = productSlice.actions;
 export default productSlice.reducer;

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { API_BASE_PATH } from "../Constants";
 import ProductPage from '../component/ProductPage';
+import ProductEdit from "../component/ProductEdit";
 
 const ProductDetails = ({isEdit}) => {
     const [productToDisplay, setProductToDisplay] = useState(null);
@@ -26,7 +27,8 @@ const ProductDetails = ({isEdit}) => {
 
     return (
       <div className="m-10 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
-        <ProductPage product={productToDisplay} />
+        {!isEdit && <ProductPage product={productToDisplay} />}
+        {isEdit && <ProductEdit product={productToDisplay}/>}
       </div>
     );
 }
