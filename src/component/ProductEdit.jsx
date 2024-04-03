@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { API_BASE_PATH } from "../Constants";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProduct } from "../features/products/productsSlice";
+import Spinner from "./Spinner";
 
 const ProductEdit = ({ product }) => {
   const NAME = "name",
@@ -26,6 +27,8 @@ const ProductEdit = ({ product }) => {
   const [price, setPrice] = useState("");
   const [totalQuantity, setTotalQuantity] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
 
   const changeImageToDisplay = (index) => {
     setImageToDisplay(imageURLs[index]);
@@ -42,6 +45,7 @@ const ProductEdit = ({ product }) => {
   }, [product]);
 
   const onChangeHandler = (event, target) => {
+    if(error)setError(null);
     switch (target) {
       case IMAGE:
         if (event.target.files && event.target.files[0]) {
@@ -69,6 +73,7 @@ const ProductEdit = ({ product }) => {
   };
 
   const addImage = () => {
+    setError(null);
     if (!imageToSend) {
       setError("No Image Uploaded");
       return;
@@ -76,7 +81,7 @@ const ProductEdit = ({ product }) => {
 
     const formData = new FormData();
     formData.append("file", imageToSend);
-
+    setLoading(true);
     axios.put(API_BASE_PATH + `/item/addImage/${product.id}`, formData, {
       headers: {
         Authorization: "Bearer " + token,
@@ -85,10 +90,12 @@ const ProductEdit = ({ product }) => {
         const prd = res.data;
         setImageURLs(prd.imageURL);
         dispatch(updateProduct(prd));
-    });
+        setLoading(false);
+    }).catch(err => setError(err.response.data.message));
   };
 
   const updateDetails = () => {
+    setError(null);
     const request = {
       userId: product.userId,
       userEmail: product.userEmail,
@@ -101,6 +108,7 @@ const ProductEdit = ({ product }) => {
       imageURL: imageURLs,
       id: product.id
     };
+    setLoading1(true);
     axios
       .post(API_BASE_PATH + `/item/update`, request, {
         headers: {
@@ -108,99 +116,128 @@ const ProductEdit = ({ product }) => {
         },
       })
       .then((res) => {
+        setLoading1(false);
         dispatch(updateProduct(res.data));
-      });
+      })
+      .catch((err) => setError(err.response.data.message));
   }
 
-  return (
-    <div className="flex gap-2">
-      <div className="w-1/3 grow flex flex-col gap-2">
-        <img
-          src={imageToDisplay}
-          alt="Image"
-          className="w-full h-160 object-cover rounded-md"
-        />
-        <div className="mt-2 grid grid-cols-7 gap-1 h-16">
-          {imageURLs?.map((imgItm, index) => (
-            <img
-              onClick={() => changeImageToDisplay(index)}
-              src={imgItm}
-              alt="Image"
-              className="w-16 h-16 rounded-md"
-            />
-          ))}
-        </div>
-        <input
-          type="file"
-          className="file:mr-5 file:py-1 file:px-3 file:border-[1px]
+  const spinner = <Spinner />;
+
+  const imageEditComp = (
+    <>
+      <img
+        src={imageToDisplay}
+        alt="Image"
+        className="w-full h-160 object-cover rounded-md"
+      />
+      <div className="mt-2 grid grid-cols-7 gap-1 h-16">
+        {imageURLs?.map((imgItm, index) => (
+          <img
+            onClick={() => changeImageToDisplay(index)}
+            src={imgItm}
+            alt="Image"
+            className="w-16 h-16 rounded-md"
+          />
+        ))}
+      </div>
+      <input
+        type="file"
+        className="file:mr-5 file:py-1 file:px-3 file:border-[1px]
                 file:text-xs file:font-medium
               file:bg-blue-500 file:text-white
                 hover:file:cursor-pointer hover:file:bg-blue-700
               hover:file:text-white file:rounded-md file:h-10"
-          onChange={(e) => onChangeHandler(e, IMAGE)}
+        onChange={(e) => onChangeHandler(e, IMAGE)}
+      />
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={addImage}
+      >
+        Add Image
+      </button>
+    </>
+  );
+
+  const productDetailsEdit = (
+    <>
+      <label>
+        <h1 className="text-left text-xl">Product Name</h1>
+        <input
+          className="w-full border-2 border-gray-200 rounded-md h-10 outline-none focus:outline-none p-2"
+          onChange={(e) => onChangeHandler(e, NAME)}
+          defaultValue={productName}
         />
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={addImage}
+      </label>
+      <label>
+        <h1 className="text-left text-xl">Product Description</h1>
+        <textarea
+          className="w-full border-2 border-gray-200 rounded-md h-20  outline-none focus:outline-none p-2"
+          onChange={(e) => onChangeHandler(e, DESCRIPTION)}
+          defaultValue={productDescription}
+        />
+      </label>
+      <label>
+        <h1 className="text-left text-xl">Quantity</h1>
+        <input
+          type="number"
+          className="w-full border-2 border-gray-200 rounded-md h-10 outline-none focus:outline-none p-2"
+          onChange={(e) => onChangeHandler(e, QUANTITY)}
+          defaultValue={totalQuantity}
+        />
+      </label>
+      <label>
+        <h1 className="text-left text-xl">Price</h1>
+        <input
+          type="number"
+          className="w-full border-2 border-gray-200 rounded-md h-10 outline-none focus:outline-none p-2"
+          onChange={(e) => onChangeHandler(e, PRICE)}
+          defaultValue={price}
+        />
+      </label>
+      <label>
+        <h1 className="text-left text-xl">Category</h1>
+        <select
+          className="w-full border-2 border-gray-200 rounded-md h-10"
+          onChange={(e) => onChangeHandler(e, CATEGORY)}
+          defaultValue={{
+            label: category?.toUpperCase(),
+            value: category?.toUpperCase(),
+          }}
         >
-          Add Image
-        </button>
+          {OPTIONS.map((optionNm, index) => (
+            <option key={index} selected={optionNm === category?.toUpperCase()}>
+              {optionNm}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button
+        className="bg-blue-500 mt-5 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={updateDetails}
+      >
+        Update Item
+      </button>
+    </>
+  );
+
+  const component = (
+    <>
+      <h1 className="text-left text-4xl mb-5">Edit Product</h1>
+      {error && <p className="text-red-500 mb-2">{error}</p>}
+      <div className="w-1/3 grow flex flex-col gap-2">
+        {loading ? spinner : imageEditComp}
       </div>
       <div className="bg-gray-500 w-0.5"></div>
       <div className="w-2/3 grow flex flex-col gap-1 p-2">
-        <label>
-          <h1 className="text-left text-xl">Product Name</h1>
-          <input
-            className="w-full border-2 border-gray-200 rounded-md h-10 outline-none focus:outline-none p-2"
-            onChange={(e) => onChangeHandler(e, NAME)}
-            defaultValue={productName}
-          />
-        </label>
-        <label>
-          <h1 className="text-left text-xl">Product Description</h1>
-          <textarea
-            className="w-full border-2 border-gray-200 rounded-md h-20  outline-none focus:outline-none p-2"
-            onChange={(e) => onChangeHandler(e, DESCRIPTION)}
-            defaultValue={productDescription}
-          />
-        </label>
-        <label>
-          <h1 className="text-left text-xl">Quantity</h1>
-          <input
-            type="number"
-            className="w-full border-2 border-gray-200 rounded-md h-10 outline-none focus:outline-none p-2"
-            onChange={(e) => onChangeHandler(e, QUANTITY)}
-            defaultValue={totalQuantity}
-          />
-        </label>
-        <label>
-          <h1 className="text-left text-xl">Price</h1>
-          <input
-            type="number"
-            className="w-full border-2 border-gray-200 rounded-md h-10 outline-none focus:outline-none p-2"
-            onChange={(e) => onChangeHandler(e, PRICE)}
-            defaultValue={price}
-          />
-        </label>
-        <label>
-          <h1 className="text-left text-xl">Category</h1>
-          <select
-            className="w-full border-2 border-gray-200 rounded-md h-10"
-            onChange={(e) => onChangeHandler(e, CATEGORY)}
-            defaultValue={{label:category?.toUpperCase(), value:category?.toUpperCase()}}
-          >
-            {OPTIONS.map((optionNm, index) => (
-              <option key={index} selected={optionNm === category?.toUpperCase()}>{optionNm}</option>
-            ))}
-          </select>
-        </label>
-        <button
-          className="bg-blue-500 mt-5 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={updateDetails}
-        >
-          Update Item
-        </button>
+        {loading1 ? spinner : productDetailsEdit}
       </div>
+    </>
+  );
+
+  return (
+    <div className="flex gap-2">
+      {component}
     </div>
   );
 };

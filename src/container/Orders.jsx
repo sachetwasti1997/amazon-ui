@@ -21,9 +21,8 @@ const Orders = () => {
 
   return (
     <div className="flex flex-col gap-4 m-10 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
-      {myOrders && myOrders?.map((order) => (
-        <OrdersCard order={order}/>
-      ))}
+      <h1 className="text-left text-4xl mb-5">My Orders</h1>
+      {myOrders && myOrders?.map((order) => <OrdersCard order={order} />)}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { API_BASE_PATH } from "../Constants";
 import { addMyProducts } from "../features/products/productsSlice";
 import { useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
 
 const AddProduct = ({ submit }) => {
   const NAME = "name",
@@ -17,6 +18,7 @@ const AddProduct = ({ submit }) => {
 
   const token = useSelector((state) => state.userReducer.token);
   const userData = useSelector((state) => state.userReducer.userData);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,6 +28,7 @@ const AddProduct = ({ submit }) => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [totalQuantity, setTotalQuantity] = useState("");
+  const [error, setError] = useState(null);
 
   const isSubmitDisabled = () => {
     return (
@@ -39,6 +42,7 @@ const AddProduct = ({ submit }) => {
   };
 
   const submitAction = () => {
+    setError(null);
     const request = {
       productName,
       productDescription,
@@ -57,7 +61,7 @@ const AddProduct = ({ submit }) => {
     const formData = new FormData();
     formData.append("data", blob);
     formData.append("file", imageToSend);
-
+    setLoading(true);
     axios
       .post(API_BASE_PATH + "/item/save", formData, {
         headers: {
@@ -67,10 +71,12 @@ const AddProduct = ({ submit }) => {
       .then((res) => {
         dispatch(addMyProducts(res.data));
         navigate("/product");
-      });
+        setLoading(false);
+      }).catch(err => setError(err.response.data.message));
   };
 
   const onChangeHandler = (event, target) => {
+    if(error) setError(null);
     switch (target) {
       case IMAGE:
         if (event.target.files && event.target.files[0]) {
@@ -97,8 +103,9 @@ const AddProduct = ({ submit }) => {
     }
   };
 
-  return (
-    <div className="m-10 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
+  const component = (
+    <>
+      {error && <p className="text-red-500 mb-2">{error}</p>}
       <h1 className="text-left text-4xl mb-5">Product Information</h1>
       <div className="flex justify-between">
         <label>
@@ -121,7 +128,7 @@ const AddProduct = ({ submit }) => {
       <label>
         <h1 className="text-left text-xl">Product Name</h1>
         <input
-          className="w-full border-2 border-gray-200 mb-5 rounded-md h-10"
+          className="w-full border-2 border-gray-200 mb-5 rounded-md h-10 p-2 outline-none focus:outline-none"
           onChange={(e) => onChangeHandler(e, NAME)}
           defaultValue={productName}
         />
@@ -129,7 +136,7 @@ const AddProduct = ({ submit }) => {
       <label>
         <h1 className="text-left text-xl">Product Description</h1>
         <textarea
-          className="w-full border-2 border-gray-200 mb-5 rounded-md h-20"
+          className="w-full border-2 border-gray-200 mb-5 rounded-md h-20 p-2 outline-none focus:outline-none"
           onChange={(e) => onChangeHandler(e, DESCRIPTION)}
           defaultValue={productDescription}
         />
@@ -139,7 +146,7 @@ const AddProduct = ({ submit }) => {
           <h1 className="text-left text-xl">Quantity</h1>
           <input
             type="number"
-            className="w-full border-2 border-gray-200 rounded-md h-10"
+            className="w-full border-2 border-gray-200 rounded-md h-10 p-2 outline-none focus:outline-none"
             onChange={(e) => onChangeHandler(e, QUANTITY)}
             defaultValue={totalQuantity}
           />
@@ -148,7 +155,7 @@ const AddProduct = ({ submit }) => {
           <h1 className="text-left text-xl">Price</h1>
           <input
             type="number"
-            className="w-full border-2 border-gray-200 rounded-md h-10"
+            className="w-full border-2 border-gray-200 rounded-md h-10 p-2 outline-none focus:outline-none"
             onChange={(e) => onChangeHandler(e, PRICE)}
             defaultValue={price}
           />
@@ -156,7 +163,7 @@ const AddProduct = ({ submit }) => {
         <label className="w-1/3">
           <h1 className="text-left text-xl">Category</h1>
           <select
-            className="w-full border-2 border-gray-200 rounded-md h-10"
+            className="w-full border-2 border-gray-200 rounded-md h-10 p-2 outline-none focus:outline-none"
             onChange={(e) => onChangeHandler(e, CATEGORY)}
             defaultValue={category}
           >
@@ -173,6 +180,14 @@ const AddProduct = ({ submit }) => {
       >
         Submit
       </button>
+    </>
+  );
+
+  const spinner = <Spinner/>
+
+  return (
+    <div className="m-10 bg-white border-solid border-cyan-950 rounded-lg text-gray-900">
+      {loading ? spinner:component}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
 
 const PaymentForm = () => {
   const element = useElements();
@@ -12,6 +13,8 @@ const PaymentForm = () => {
   const navigate = useNavigate();
 
   const [counter, setCounter] = useState(60);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (counter > 0) {
@@ -35,6 +38,7 @@ const PaymentForm = () => {
     };
     const url = "https://amazon.dev/api/v1/payment";
     axios.post(url, paymentInfo, config).then((res) => {
+      setLoading(true);
       const stripeResponse = res.data;
       stripe
         .confirmCardPayment(
@@ -64,13 +68,17 @@ const PaymentForm = () => {
             .then((res) => {
               navigate("/orders");
             });
+        })
+        .catch((err) => {
+          setError(err);
         });
-    });
+    }).catch(err => setError(err.message));
   };
 
-  return (
-    <div className="h-screen flex flex-col m-10 items-center gap-2 justify-center">
-      <p className="text-red-500">Please complete payment within {counter} seconds</p>
+  const spinner = <Spinner/>
+
+  const component = (
+    <>
       <div className="w-full m-20 p-6 bg-white border border-gray-50 rounded-lg shadow dark:bg-gray-80 dark:border-gray-700">
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 ">
           Credit Card
@@ -101,6 +109,17 @@ const PaymentForm = () => {
           </svg>
         </button>
       </div>
+    </>
+  );
+
+  return (
+    <div className="h-screen flex flex-col m-10 items-center gap-2 justify-center">
+      <h1 className="text-left text-4xl mb-5">Complete Payment</h1>
+      <p className="text-red-500">
+        Please complete payment within {counter} seconds
+      </p>
+      {loading ? spinner : null}
+      {component}
     </div>
   );
 };
